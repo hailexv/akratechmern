@@ -18,11 +18,21 @@ import {
   IconButton 
 } from "@mui/material";
 
+
+// Icons
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+
+// Actions
+import * as Actions from '../store/actions/contact';
 
 
 function Header() {
 
+  const dispatch = useDispatch();
+
+  function getContacts() {
+    dispatch(Actions.getContacts())
+  }
 
   return (
     <>
@@ -34,7 +44,7 @@ function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Counter
           </Typography>
-          <Button color="success" variant="contained" endIcon={<CloudDownloadIcon />}>
+          <Button color="success" variant="contained" onClick={getContacts} endIcon={<CloudDownloadIcon />}>
             Get Contacts
           </Button>
         </Toolbar>

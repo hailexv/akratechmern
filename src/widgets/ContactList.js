@@ -28,6 +28,8 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 
 function ContactList() {
 
+  const contacts = useSelector(({contact}) => contact.contacts);
+
     return (
         <>
 
@@ -45,36 +47,29 @@ function ContactList() {
           }}
         >
 
-<List>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            <ImageIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            <WorkIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="Work" secondary="Jan 7, 2014" />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-        <Avatar
-                alt="Remy Sharp"
-                src="https://randomuser.me/api/portraits/women/36.jpg"
-                sx={{ width: 50, height: 50 }}
-              />
-        </ListItemAvatar>
-        <ListItemText primary="Vacation" secondary="July 20, 2014" />
-      </ListItem>
-    </List>
+          <List>
+
+          {contacts ? contacts.map((contact, i) => 
+            
+            <Box>
+              
+              <ListItem>
+                <ListItemAvatar>
+                <Avatar
+                        alt="Remy Sharp"
+                        src={contact.picture.large}
+                        sx={{ width: 50, height: 50 }}
+                      />
+                </ListItemAvatar>
+                <ListItemText primary={`${contact.name.title} ${contact.name.first} ${contact.name.last}`} secondary={contact.phone} />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              </Box>
+
+          ) : ''}
+         
+            
+          </List>
 
           </Grid>
 
