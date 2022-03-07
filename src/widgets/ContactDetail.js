@@ -103,7 +103,7 @@ function ContactDetail() {
     return (
         <>
 
-    <Grid item sm={4} md={8} component={Paper} elevation={6} square style={{
+    <Grid item xs={12} md={8} component={Paper} elevation={6} square style={{
       backgroundImage: 'url("assets/images/rain-grey.png")'
     }}>
      

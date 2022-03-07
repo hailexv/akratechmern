@@ -41,8 +41,7 @@ function ContactList() {
         <Grid
           item
           pt={2}
-          xs={false}
-          xs={12} sm={8} md={4}
+          xs={12} sm={12} md={4}
           sx={{
             backgroundColor: '#CDC7BE',
             backgroundRepeat: 'no-repeat',   
