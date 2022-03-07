@@ -40,7 +40,7 @@ function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {contacts ? contacts.length : 'Empty'}
           </Typography>
-          <Button color="success" variant="contained" onClick={getContacts} endIcon={<CloudDownloadIcon />}>
+          <Button color="success" sx={{ borderRadius: 2 }} variant="contained" onClick={getContacts} endIcon={<CloudDownloadIcon />}>
             Get Contacts
           </Button>
         </Toolbar>

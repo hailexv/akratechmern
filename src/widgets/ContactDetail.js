@@ -12,11 +12,15 @@ import {
   Paper,
   Avatar,
   CardActions,
-  Chip
+  Chip,
+  withStyles,
 } from "@mui/material";
+
+import { makeStyles } from "@mui/styles";
 
 // mui icons
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // Actions
 import * as Actions from '../store/actions/contact';
@@ -24,13 +28,29 @@ import * as Actions from '../store/actions/contact';
 
 var selectedContactClone = {};
 
-function ContactDetail(props) {
+const styles = muiBaseTheme => ({
+  card: {
+    borderRdius: '44px'
+  },
+  
+  avatar: {
+    display: "inline-block",
+    border: "2px solid white",
+    "&:not(:first-of-type)": {
+      marginLeft: -muiBaseTheme.spacing.unit
+    }
+  }
+});
+
+const useStyles = makeStyles(styles);
+
+function ContactDetail() {
 
   const selectedContact = useSelector(({contact}) => contact.selectedContact);
   const deletingContacts = useSelector(({contact}) => contact.deletingContacts);
   const contacts = useSelector(({contact}) => contact.contacts);
 
-  
+  const classes = useStyles();
   const [deleteClicked, setDeleteClicked] = useState(false);
 
   const dispatch = useDispatch();
@@ -59,9 +79,10 @@ function ContactDetail(props) {
 
       if(deletingContacts.find(contact => contact.email == email)) {
 
-        await sleep(1300);
         dispatch(Actions.setCounter(newCounter-1, email))
         newCounter--;
+
+        await sleep(1300);
         
       } else {
 
@@ -119,13 +140,14 @@ function ContactDetail(props) {
             {
               selectedContact ?
 
-              <Card sx={{ maxWidth: 345 }}>
+              <Card className={classes.card} sx={{ maxWidth: 345, borderRadius: 8 }} >
 
               <Box display="flex" justifyContent="center" alignItems="center" p={2} style={{
                 background: '#3C4252'
               }}>
               <Avatar
-                alt="Remy Sharp"
+                alt="contact name"
+                className={classes.avatar}
                 src={selectedContact.picture.large}
                 sx={{ width: 200, height: 200 }}
               />
@@ -135,6 +157,8 @@ function ContactDetail(props) {
                 
                 <Grid container direction="row" alignItems="center">
                     <AccountCircleIcon color="primary"  />  <Typography pl={2} variant="h5" component="div">
+
+
                     {`${selectedContact.name.title} ${selectedContact.name.first} ${selectedContact.name.last}`}
                 </Typography>
                 </Grid>
@@ -144,9 +168,9 @@ function ContactDetail(props) {
                   marginBottom: '1rem'
               }} >
                 {
-                  (deletingContacts.findIndex(contact => contact.email == selectedContact.email ) != -1) ? <Button onClick={cancelDelete} color="warning" variant="contained" endIcon={<Chip label={deletingContacts[deletingContacts.findIndex(contact => contact.email == selectedContact.email)].counter} size="small" />} >
+                  (deletingContacts.findIndex(contact => contact.email == selectedContact.email ) != -1) ? <Button onClick={cancelDelete} color="warning" variant="contained" endIcon={<Chip sx={{color: 'white'}} label={deletingContacts[deletingContacts.findIndex(contact => contact.email == selectedContact.email)].counter} size="small" />} >
                   Cancel Delete 
-                </Button> : <Button onClick={ deleteContact } color="error" variant="contained" >
+                </Button> : <Button endIcon={<DeleteIcon />} onClick={ deleteContact } color="error" variant="contained" sx={{ borderRadius: 2 }}>
                 Delete contact
               </Button>
                 }

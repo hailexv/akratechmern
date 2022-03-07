@@ -11,8 +11,11 @@ import {
   Avatar,
   ListItemText,
   Chip,
-  Divider
+  Divider,
+  withStyles
 } from "@mui/material";
+
+
 
 
 // Actions
@@ -43,7 +46,7 @@ function ContactList() {
           pt={2}
           xs={12} sm={12} md={4}
           sx={{
-            backgroundColor: '#CDC7BE',
+            background: 'linear-gradient(90deg, #FFEFBA 0%, #FFFFFF 100%)' ,
             backgroundRepeat: 'no-repeat',   
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -56,7 +59,9 @@ function ContactList() {
             
             <Box key={i}>
               
-              <ListItem key={i} sx={{
+              <ListItem style={{
+                      cursor: "pointer"
+                    }} key={i} sx={{
               backgroundColor: selectedContact && selectedContact.email == contact.email ? '#E2DEA9' : ''
             }} onClick={() => {
               selectContact(contact.email)
