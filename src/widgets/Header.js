@@ -5,14 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { 
   Box, 
   Button, 
-  Card, 
-  CardContent, 
-  makeStyles, 
-  useTheme,
-  Grid,
-  InputAdornment,
   Typography,
-  CssBaseline,
   AppBar,
   Toolbar,
   IconButton 
@@ -29,6 +22,7 @@ import * as Actions from '../store/actions/contact';
 function Header() {
 
   const dispatch = useDispatch();
+  const contacts = useSelector(({contact}) => contact.contacts);
 
   function getContacts() {
     dispatch(Actions.getContacts())
@@ -42,7 +36,7 @@ function Header() {
         <Toolbar>
           
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Counter
+            {contacts ? contacts.length : 'Empty'}
           </Typography>
           <Button color="success" variant="contained" onClick={getContacts} endIcon={<CloudDownloadIcon />}>
             Get Contacts

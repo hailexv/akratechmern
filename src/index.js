@@ -3,13 +3,19 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import Provider from "react-redux/es/components/Provider";
 import store from './store';
+import {CssBaseline} from "@mui/material";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme();
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>,
+  </ThemeProvider>
+ ,
   document.getElementById('root')
 );
 

@@ -7,28 +7,95 @@ import {
   Button, 
   Card, 
   CardContent, 
-  makeStyles, 
-  useTheme,
   Grid,
-  InputAdornment,
   Typography,
-  CssBaseline,
   Paper,
   Avatar,
-  TextField,
-  Checkbox,
-  FormControlLabel ,
-  CardMedia,
   CardActions,
-  CardHeader
+  Chip
 } from "@mui/material";
 
 // mui icons
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+// Actions
+import * as Actions from '../store/actions/contact';
 
+var deleteTracker = false;
 
 function ContactDetail() {
+
+  const selectedContact = useSelector(({contact}) => contact.selectedContact);
+  const deleteContactState = useSelector(({contact}) => contact.deleteContact);
+  const deletingContact = useSelector(({contact}) => contact.deletingContact);
+  const contacts = useSelector(({contact}) => contact.contacts);
+  const counter = useSelector(({contact}) => contact.counter);
+  const [deleteClicked, setDeleteClicked] = useState(false);
+
+  const dispatch = useDispatch();
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  var newCounter = 10;
+
+  async function deleteContact() {
+
+    deleteTracker = true;
+
+    setDeleteClicked(true)
+    dispatch(Actions.deleteContact())
+    dispatch(Actions.deletingContact(selectedContact.email))
+
+    for (let i = 0; i < 10; i++) {
+
+      if(deleteTracker) {
+
+        await sleep(1300);
+        dispatch(Actions.setCounter(newCounter-1))
+        newCounter--;
+
+      } else {
+
+        dispatch(Actions.setCounter(10))
+        newCounter=10;
+
+        break
+      }
+    
+    }
+
+
+  }
+
+
+  function cancelDelete() {
+
+    deleteTracker = false;
+    setDeleteClicked(false)
+    dispatch(Actions.cancelDelete())
+    dispatch(Actions.deletingContact(null))
+
+  }
+
+  useEffect(async () => {
+
+    if(counter == 0) {
+      if(deleteContactState) {
+        var filtered = contacts.filter(function(contact) { return contact.email != deletingContact });
+        dispatch(Actions.removeContact(filtered))
+        dispatch(Actions.setCounter(10))
+        dispatch(Actions.selectContact(null))
+        // dispatch(Actions.cancelDelete())
+        
+        setDeleteClicked(false)
+      } else {
+        console.log('not deleted')
+      }
+    }
+    
+});
 
     return (
         <>
@@ -36,6 +103,7 @@ function ContactDetail() {
     <Grid item sm={4} md={8} component={Paper} elevation={6} square style={{
       backgroundImage: 'url("assets/images/rain-grey.png")'
     }}>
+     
           <Box
             sx={{
               my: 8,
@@ -45,14 +113,18 @@ function ContactDetail() {
               alignItems: 'center',
             }}
           >
-          <Card sx={{ maxWidth: 345 }}>
+
+            {
+              selectedContact ?
+
+              <Card sx={{ maxWidth: 345 }}>
 
               <Box display="flex" justifyContent="center" alignItems="center" p={2} style={{
                 background: '#3C4252'
               }}>
               <Avatar
                 alt="Remy Sharp"
-                src="https://randomuser.me/api/portraits/women/36.jpg"
+                src={selectedContact.picture.large}
                 sx={{ width: 200, height: 200 }}
               />
               </Box>
@@ -61,7 +133,7 @@ function ContactDetail() {
                 
                 <Grid container direction="row" alignItems="center">
                     <AccountCircleIcon color="primary"  />  <Typography pl={2} variant="h5" component="div">
-                   Lizard Lizard
+                    {`${selectedContact.name.title} ${selectedContact.name.first} ${selectedContact.name.last}`}
                 </Typography>
                 </Grid>
               </CardContent>
@@ -69,11 +141,19 @@ function ContactDetail() {
                   justifyContent: 'center',
                   marginBottom: '1rem'
               }} >
-              <Button color="error" variant="contained" >
-                Get Contacts
+                {
+                  deleteClicked && deletingContact == selectedContact.email ? <Button onClick={cancelDelete} color="warning" variant="contained" endIcon={<Chip label={counter} size="small" />} >
+                  Cancel Delete 
+                </Button> : <Button onClick={deleteContact} color="error" variant="contained" >
+                Delete contact
               </Button>
+                }
+              
               </CardActions>
         </Card>
+        : <h1>no contact selected</h1>
+            }
+          
           </Box>
         </Grid>
 

@@ -4,44 +4,48 @@ import {useDispatch, useSelector} from 'react-redux';
 // @material-ui/core components
 import { 
   Box, 
-  Button, 
-  Card, 
-  CardContent, 
-  makeStyles, 
-  useTheme,
   Grid,
-  InputAdornment,
-  Typography,
-  CssBaseline,
   List,
   ListItem,
   ListItemAvatar,
   Avatar,
   ListItemText,
+  Chip,
   Divider
 } from "@mui/material";
 
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+
+// Actions
+import * as Actions from '../store/actions/contact';
 
 
 function ContactList() {
 
+  const dispatch = useDispatch();
+
   const contacts = useSelector(({contact}) => contact.contacts);
+  const selectedContact = useSelector(({contact}) => contact.selectedContact);
+  const deletingContact = useSelector(({contact}) => contact.deletingContact);
+  const counter = useSelector(({contact}) => contact.counter);
+
+  function selectContact(email) {
+    const contact = contacts.find(contact => contact.email == email);
+
+    dispatch(Actions.selectContact(contact))
+    
+  }
 
     return (
         <>
 
         <Grid
           item
-          p={2}
+          pt={2}
           xs={false}
           xs={12} sm={8} md={4}
           sx={{
-            backgroundColor: '#A7A7A7',
-            backgroundRepeat: 'no-repeat',
-        
+            backgroundColor: '#CDC7BE',
+            backgroundRepeat: 'no-repeat',   
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -51,9 +55,13 @@ function ContactList() {
 
           {contacts ? contacts.map((contact, i) => 
             
-            <Box>
+            <Box >
               
-              <ListItem>
+              <ListItem sx={{
+              backgroundColor: selectedContact && selectedContact.email == contact.email ? '#E2DEA9' : ''
+            }} onClick={() => {
+              selectContact(contact.email)
+            }}>
                 <ListItemAvatar>
                 <Avatar
                         alt="Remy Sharp"
@@ -62,11 +70,16 @@ function ContactList() {
                       />
                 </ListItemAvatar>
                 <ListItemText primary={`${contact.name.title} ${contact.name.first} ${contact.name.last}`} secondary={contact.phone} />
+
+                {
+                 selectedContact && selectedContact.email !== contact.email && deletingContact == contact.email ? <Chip label={counter} color="warning" size="small" /> : ''
+                }
+                
               </ListItem>
               <Divider variant="inset" component="li" />
               </Box>
 
-          ) : ''}
+          ) : <box m={2}><h2>Click on get contacts to fetch contacts</h2></box>}
          
             
           </List>
