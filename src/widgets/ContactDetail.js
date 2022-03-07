@@ -87,7 +87,7 @@ function ContactDetail() {
         dispatch(Actions.removeContact(filtered))
         dispatch(Actions.setCounter(10))
         dispatch(Actions.selectContact(null))
-        // dispatch(Actions.cancelDelete())
+        dispatch(Actions.deletingContact(null))
         
         setDeleteClicked(false)
       } else {
@@ -144,7 +144,7 @@ function ContactDetail() {
                 {
                   deleteClicked && deletingContact == selectedContact.email ? <Button onClick={cancelDelete} color="warning" variant="contained" endIcon={<Chip label={counter} size="small" />} >
                   Cancel Delete 
-                </Button> : <Button onClick={deleteContact} color="error" variant="contained" >
+                </Button> : deletingContact ? '' : <Button onClick={ deleteContact } color="error" variant="contained" >
                 Delete contact
               </Button>
                 }
