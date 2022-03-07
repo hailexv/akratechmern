@@ -9,21 +9,18 @@ const middleware = [thunk];
 
 var store;
 
-// if(window.location.hostname == 'localhost') {
+if(window.location.hostname == 'localhost') {
 
-//     store = createStore(createReducer(),
-//     compose(applyMiddleware(...middleware),
-//         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+    store = createStore(createReducer(),
+    compose(applyMiddleware(...middleware),
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
 
-// } else {
+} else {
 
-//     store = createStore(createReducer(),
-//     compose(applyMiddleware(...middleware)));
-
-// }
-
-store = createStore(createReducer(),
+    store = createStore(createReducer(),
     compose(applyMiddleware(...middleware)));
+
+}
 
 
 export default store;

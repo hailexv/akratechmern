@@ -4,6 +4,7 @@ export const GET_CONTACTS = 'GET_CONTACTS';
 export const SELECT_CONTACT = 'SELECT_CONTACT';
 export const DELETE_CONTACT = 'DELETE_CONTACT';
 export const SET_DELETING_CONTACT = 'SET_DELETING_CONTACT';
+export const REMOVE_CONTACT = 'REMOVE_CONTACT';
 export const CANCEL_DELETE = 'CANCEL_DELETE';
 export const SET_COUNTER = 'SET_COUNTER';
 
@@ -40,25 +41,26 @@ export function selectContact(contact)
 
 }
 
-export function removeContact(contacts)
+export function removeContact(email)
 {
 
     return (dispatch) =>
        
     dispatch({
-        type   : GET_CONTACTS,
-        payload: contacts
+        type   : REMOVE_CONTACT,
+        payload: email
     });
 
 }
 
-export function deleteContact()
+export function deleteContact(email)
 {
 
     return (dispatch) =>
        
         dispatch({
-            type   : DELETE_CONTACT
+            type   : DELETE_CONTACT,
+            payload : email
         });
 
 }
@@ -76,25 +78,26 @@ export function deletingContact(email)
 
 }
 
-export function cancelDelete()
+export function cancelDelete(email)
 {
 
     return (dispatch) =>
        
         dispatch({
-            type   : CANCEL_DELETE
+            type   : CANCEL_DELETE,
+            payload : email
         });
 
 }
 
-export function setCounter(value)
+export function setCounter(counter, email)
 {
-
     return (dispatch) =>
        
         dispatch({
             type   : SET_COUNTER,
-            payload: value
+            counter,
+            email
         });
 
 }

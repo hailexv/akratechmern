@@ -21,15 +21,16 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 // Actions
 import * as Actions from '../store/actions/contact';
 
-var deleteTracker = false;
 
-function ContactDetail() {
+var selectedContactClone = {};
+
+function ContactDetail(props) {
 
   const selectedContact = useSelector(({contact}) => contact.selectedContact);
-  const deleteContactState = useSelector(({contact}) => contact.deleteContact);
-  const deletingContact = useSelector(({contact}) => contact.deletingContact);
+  const deletingContacts = useSelector(({contact}) => contact.deletingContacts);
   const contacts = useSelector(({contact}) => contact.contacts);
-  const counter = useSelector(({contact}) => contact.counter);
+
+  
   const [deleteClicked, setDeleteClicked] = useState(false);
 
   const dispatch = useDispatch();
@@ -38,32 +39,48 @@ function ContactDetail() {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  var newCounter = 10;
+
 
   async function deleteContact() {
 
-    deleteTracker = true;
+    var newCounter = 10;
+
+    const email = selectedContact.email;
 
     setDeleteClicked(true)
-    dispatch(Actions.deleteContact())
-    dispatch(Actions.deletingContact(selectedContact.email))
+
+    dispatch(Actions.deleteContact(email))
+
+    
 
     for (let i = 0; i < 10; i++) {
 
-      if(deleteTracker) {
+      console.log(newCounter)
+
+      if(deletingContacts.find(contact => contact.email == email)) {
 
         await sleep(1300);
-        dispatch(Actions.setCounter(newCounter-1))
+        dispatch(Actions.setCounter(newCounter-1, email))
         newCounter--;
-
+        
       } else {
 
-        dispatch(Actions.setCounter(10))
-        newCounter=10;
 
         break
       }
     
+    }
+
+    if(newCounter == 0) {
+
+      dispatch(Actions.removeContact(email))
+
+      dispatch(Actions.cancelDelete(email))
+
+      if(email == selectedContactClone.email) {
+        dispatch(Actions.selectContact(null))
+      }
+
     }
 
 
@@ -72,33 +89,15 @@ function ContactDetail() {
 
   function cancelDelete() {
 
-    deleteTracker = false;
-    setDeleteClicked(false)
-    dispatch(Actions.cancelDelete())
-    dispatch(Actions.deletingContact(null))
+    dispatch(Actions.cancelDelete(selectedContact.email))
 
   }
 
-  useEffect(async () => {
+  useEffect(() => {
+    selectedContactClone = selectedContact;
+}, [dispatch, selectedContact]);
 
-    if(counter == 0) {
-      if(deleteContactState) {
-        if(deletingContact == selectedContact.email) {
-          dispatch(Actions.selectContact(null))
-        }
-        var filtered = contacts.filter(function(contact) { return contact.email != deletingContact });
-        dispatch(Actions.removeContact(filtered))
-        dispatch(Actions.setCounter(10))
-        
-        dispatch(Actions.deletingContact(null))
-        
-        setDeleteClicked(false)
-      } else {
-        console.log('not deleted')
-      }
-    }
-    
-});
+ 
 
     return (
         <>
@@ -145,9 +144,9 @@ function ContactDetail() {
                   marginBottom: '1rem'
               }} >
                 {
-                  deleteClicked && deletingContact == selectedContact.email ? <Button onClick={cancelDelete} color="warning" variant="contained" endIcon={<Chip label={counter} size="small" />} >
+                  (deletingContacts.findIndex(contact => contact.email == selectedContact.email ) != -1) ? <Button onClick={cancelDelete} color="warning" variant="contained" endIcon={<Chip label={deletingContacts[deletingContacts.findIndex(contact => contact.email == selectedContact.email)].counter} size="small" />} >
                   Cancel Delete 
-                </Button> : deletingContact ? '' : <Button onClick={ deleteContact } color="error" variant="contained" >
+                </Button> : <Button onClick={ deleteContact } color="error" variant="contained" >
                 Delete contact
               </Button>
                 }

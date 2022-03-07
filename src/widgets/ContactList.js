@@ -24,9 +24,9 @@ function ContactList() {
   const dispatch = useDispatch();
 
   const contacts = useSelector(({contact}) => contact.contacts);
-  const selectedContact = useSelector(({contact}) => contact.selectedContact);
-  const deletingContact = useSelector(({contact}) => contact.deletingContact);
-  const counter = useSelector(({contact}) => contact.counter);
+  const selectedContact = useSelector(({contact}) => contact.selectedContact) || {}
+  const deletingContacts = useSelector(({contact}) => contact.deletingContacts);
+
 
   function selectContact(email) {
     const contact = contacts.find(contact => contact.email == email);
@@ -54,9 +54,9 @@ function ContactList() {
 
           {contacts ? contacts.map((contact, i) => 
             
-            <Box >
+            <Box key={i}>
               
-              <ListItem sx={{
+              <ListItem key={i} sx={{
               backgroundColor: selectedContact && selectedContact.email == contact.email ? '#E2DEA9' : ''
             }} onClick={() => {
               selectContact(contact.email)
@@ -71,14 +71,14 @@ function ContactList() {
                 <ListItemText primary={`${contact.name.title} ${contact.name.first} ${contact.name.last}`} secondary={contact.phone} />
 
                 {
-                 selectedContact && selectedContact.email !== contact.email && deletingContact == contact.email ? <Chip label={counter} color="warning" size="small" /> : ''
+                 selectedContact.email !== contact.email && (deletingContacts.findIndex(newContact => newContact.email == contact.email ) != -1) ? <Chip label={deletingContacts[deletingContacts.findIndex(newContact => newContact.email == contact.email)].counter} color="warning" size="small" /> : ''
                 }
                 
               </ListItem>
               <Divider variant="inset" component="li" />
               </Box>
 
-          ) : <box m={2}><h2>Click on get contacts to fetch contacts</h2></box>}
+          ) : <Box m={2}><h2>Click on get contacts to fetch contacts</h2></Box>}
          
             
           </List>

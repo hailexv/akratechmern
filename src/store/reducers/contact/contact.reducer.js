@@ -3,9 +3,7 @@ import * as Actions from '../../actions/contact';
 const initialState = {
     contacts: null,
     selectedContact: null,
-    deleteContact: false,
-    deletingContact: null,
-    counter: 10
+    deletingContacts: [],
 };
 
 const contact = function (state = initialState, action) {
@@ -30,9 +28,14 @@ const contact = function (state = initialState, action) {
         }
         case Actions.DELETE_CONTACT:
         {
+            var deletingContacts = state.deletingContacts
+            deletingContacts.push({
+                email : action.payload,
+                counter : 10
+            })
             return {
                 ...state,
-                deleteContact  : true
+                deletingContacts
                 
             };
         }
@@ -46,18 +49,42 @@ const contact = function (state = initialState, action) {
         }
         case Actions.CANCEL_DELETE:
         {
+            const objIndex = state.deletingContacts.findIndex((contact => contact.email == action.payload));
+
             return {
                 ...state,
-                deleteContact  : false
+                deletingContacts : [
+                    ...state.deletingContacts.slice(0, objIndex),
+                    ...state.deletingContacts.slice(objIndex + 1)
+                ]
+                
+            };
+        }
+        case Actions.REMOVE_CONTACT:
+        {
+            const objIndex = state.contacts.findIndex((contact => contact.email == action.payload));
+
+            return {
+                ...state,
+                contacts : [
+                    ...state.contacts.slice(0, objIndex),
+                    ...state.contacts.slice(objIndex + 1)
+                ]
                 
             };
         }
         case Actions.SET_COUNTER:
         {
-            console.log('set counter called')
+            var deletingContacts = state.deletingContacts
+
+            const objIndex = deletingContacts.findIndex((contact => contact.email == action.email));
+            deletingContacts[objIndex].counter = action.counter
+
             return {
                 ...state,
-                counter  : action.payload
+                deletingContacts : state.deletingContacts.map(contact=> contact.email === action.email ? // Loop through the array to find the post you want to modify
+                    { ...contact, counter: action.counter} : contact // Copy the post state and then modify it. Else return the same object.
+                )
                 
             };
         }
