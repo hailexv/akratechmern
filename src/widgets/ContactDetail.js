@@ -83,10 +83,13 @@ function ContactDetail() {
 
     if(counter == 0) {
       if(deleteContactState) {
+        if(deletingContact == selectedContact.email) {
+          dispatch(Actions.selectContact(null))
+        }
         var filtered = contacts.filter(function(contact) { return contact.email != deletingContact });
         dispatch(Actions.removeContact(filtered))
         dispatch(Actions.setCounter(10))
-        dispatch(Actions.selectContact(null))
+        
         dispatch(Actions.deletingContact(null))
         
         setDeleteClicked(false)
