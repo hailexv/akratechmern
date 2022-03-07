@@ -17,6 +17,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 // Actions
 import * as Actions from '../store/actions/contact';
+import * as snackAction from '../store/actions/helper';
 
 
 function Header() {
@@ -25,6 +26,7 @@ function Header() {
   const contacts = useSelector(({contact}) => contact.contacts);
 
   function getContacts() {
+    dispatch(snackAction.showDialog());
     dispatch(Actions.getContacts())
   }
 

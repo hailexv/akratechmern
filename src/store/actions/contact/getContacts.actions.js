@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import * as snackAction from '../helper';
 export const GET_CONTACTS = 'GET_CONTACTS';
 export const SELECT_CONTACT = 'SELECT_CONTACT';
 export const DELETE_CONTACT = 'DELETE_CONTACT';
@@ -16,6 +16,10 @@ export function getContacts()
         axios
             .get(`https://randomuser.me/api/?results=4`)
             .then(res => {  
+
+                dispatch(snackAction.hideDialog());
+
+                dispatch(snackAction.showMessage('Contacts fetched successfully', "success"));
 
                 dispatch({
                     type   : GET_CONTACTS,
@@ -44,12 +48,18 @@ export function selectContact(contact)
 export function removeContact(email)
 {
 
-    return (dispatch) =>
-       
-    dispatch({
-        type   : REMOVE_CONTACT,
-        payload: email
-    });
+    return (dispatch) => {
+
+
+        dispatch({
+            type   : REMOVE_CONTACT,
+            payload: email
+        });
+    
+        dispatch(snackAction.showMessage(`${email} deleted successfully`, "success"));
+
+
+    }
 
 }
 
@@ -65,28 +75,19 @@ export function deleteContact(email)
 
 }
 
-export function deletingContact(email)
-{
 
-    return (dispatch) =>
-       
-        dispatch({
-            type   : SET_DELETING_CONTACT,
-            payload : email
-        });
-
-
-}
 
 export function cancelDelete(email)
 {
 
-    return (dispatch) =>
-       
+    return (dispatch) => {
+
         dispatch({
             type   : CANCEL_DELETE,
             payload : email
         });
+     
+    }
 
 }
 
